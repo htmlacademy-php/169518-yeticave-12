@@ -3,40 +3,40 @@ DEFAULT CHARACTER SET utf8
 DEFAULT COLLATE utf8_general_ci;
 
 USE yeticave;
-CREATE TABLE categories (
-    category_id INT AUTO_INCREMENT PRIMARY KEY,
-    category_name VARCHAR(64) NOT NULL,
-    symbol_code VARCHAR(64) NOT NULL
+CREATE TABLE category (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(64) NOT NULL,
+    `symbol` VARCHAR(64) NOT NULL
 );
-CREATE INDEX category_name_index ON categories (category_name);
+CREATE INDEX `category_name_index` ON category(`name`);
 CREATE TABLE users (
-    user_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_email VARCHAR(255) UNIQUE NOT NULL,
-    user_name VARCHAR(64) NOT NULL,
-    user_pass VARCHAR(64) NOT NULL,
-    user_contact TEXT(500) NOT NULL
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `email` VARCHAR(255) UNIQUE NOT NULL,
+    `name` VARCHAR(64) NOT NULL,
+    `pass` VARCHAR(64) NOT NULL,
+    `contact` TEXT(500) NOT NULL
 );
-CREATE TABLE lots (
-    lot_id INT AUTO_INCREMENT PRIMARY KEY,
-    lot_date_create  DATETIME DEFAULT CURRENT_TIMESTAMP,
-    lot_name VARCHAR(255) NOT NULL,
-    lot_description TEXT(500) NOT NULL,
-    lot_image VARCHAR(255) NOT NULL, 
-    lot_first_price INT NOT NULL,
-    lot_date_finish  DATETIME,
-    lot_price_step INT NOT NULL,
-    lot_category INT NOT NULL,
-    lot_user INT NOT NULL,
-    FOREIGN KEY (lot_category) REFERENCES categories (category_id),
-    FOREIGN KEY (lot_user) REFERENCES users(user_id)
+CREATE TABLE lot (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `create`  DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `name` VARCHAR(255) NOT NULL,
+    `description` TEXT(500) NOT NULL,
+    `image` VARCHAR(255) NOT NULL, 
+    `first_price` INT NOT NULL,
+    `finish`  DATETIME,
+    `price_step` INT NOT NULL,
+    `category` INT NOT NULL,
+    `user` INT NOT NULL,
+    FOREIGN KEY (`category`) REFERENCES category(`id`),
+    FOREIGN KEY (`user`) REFERENCES users(`id`)
 );
-CREATE INDEX lot_name_index ON lots (lot_name);
-CREATE TABLE bets (
-    bet_id INT AUTO_INCREMENT PRIMARY KEY,
-    bet_date  DATETIME DEFAULT CURRENT_TIMESTAMP,
-    bet_price INT NOT NULL,
-    bet_lot_id INT NOT NULL,
-    bet_user_id INT NOT NULL,
-    FOREIGN KEY (bet_lot_id) REFERENCES lots(lot_id),
-    FOREIGN KEY (bet_user_id) REFERENCES users(user_id)
+CREATE INDEX lot_name_index ON lot (`name`);
+CREATE TABLE bet (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `date`  DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `price` INT NOT NULL,
+    `bet_lot_id` INT NOT NULL,
+    `bet_user_id` INT NOT NULL,
+    FOREIGN KEY (`bet_lot_id`) REFERENCES lot(`id`),
+    FOREIGN KEY (`bet_user_id`) REFERENCES users(`id`)
 );
