@@ -54,4 +54,4 @@ SET `heading` = '2020 Ботинки для сноуборда DC Mutiny Charoca
 WHERE `id` = 4;
 
 -- увеличить время закрытия лота на неделю
-UPDATE lot SET finish = DATE_ADD(finish, INTERVAL 7 DAY);
+UPDATE lot SET finish = DATE_ADD(finish, INTERVAL 21 DAY);

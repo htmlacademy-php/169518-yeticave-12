@@ -1,4 +1,4 @@
-
+<main class="container">
     <section class="lot-item container">
         <h2><?=htmlspecialchars($single_item['heading']); ?></h2>
         <div class="lot-item__content">

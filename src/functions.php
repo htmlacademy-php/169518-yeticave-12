@@ -100,47 +100,10 @@ function date_finishing($finishing) {
     return($diff_array);
 }
 
-function show_error(&$content, $error) {
+function show_error($content, $error) {
     $content = include_template ('error.php', ['error' => $error]);
 }
 
 function getPostVal($name) {
     return filter_input(INPUT_POST, $name);
-}
-
-function validateLength($name, $min, $max) {
-    $len = strlen($name);
-
-    if ($len < $min or $len > $max) {
-        return "Значение должно быть от $min до $max символов";
-    }
-    return null;
-}
-
-function validateNumeric($name) {
-    switch ($name) {
-        case (!is_numeric($name)):
-            return "Введите число";
-            break;
-        case (abs($name) != $name):
-            return "Число должно быть больше нуля";
-            break;
-    }  
-}
-
-function validateDate($name) {
-    $date_tomorrow = date_create('tomorrow');
-    $date_ending = date_create($name);
-   if($date_ending < $date_tomorrow) {
-    return "Торги должны длиться как минимум 1 день начиная с сегодня";
-   }
-   return null;
-}
-
-function validateCategory($id, $allowed_list) {
-    if (!in_array($id, $allowed_list)) {
-        return "Указана несуществующая категория";
-    }
-
-    return null;
 }
