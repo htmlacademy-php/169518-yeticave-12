@@ -1,4 +1,5 @@
 <?= $header; ?>
+<?= $top_menu; ?>
 <?= $main_content; ?>
 <?= $single_lot_content; ?>
 </div>
@@ -70,7 +71,7 @@
             </div>
         </div>
     </footer>
-    <script src="flatpickr.js"></script>
+    <!--<script src="flatpickr.js"></script>-->
     <script src="script.js"></script>
 </body>
 

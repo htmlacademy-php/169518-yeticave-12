@@ -1,13 +1,4 @@
-<main>
-    <nav class="nav">
-        <ul class="nav__list container">
-            <?php foreach ($categories as $category): ?>
-            <li class="nav__item">
-                <a href="<?=htmlspecialchars($category['symbol']);?>"><?=htmlspecialchars($category['title']);?></a>
-            </li>
-            <?php endforeach; ?>
-        </ul>
-    </nav>
+<main class="container">
     <section class="lot-item container">
         <h2><?=htmlspecialchars($single_item['heading']); ?></h2>
         <div class="lot-item__content">
@@ -30,7 +21,7 @@
                     <div class="lot-item__cost-state">
                         <div class="lot-item__rate">
                             <span class="lot-item__amount">Текущая цена</span>
-                            <span class="lot-item__cost">10 999</span>
+                            <span class="lot-item__cost"><?=$single_item['first_price']; ?> ₽</span>
                         </div>
                         <div class="lot-item__min-cost">
                             Мин. ставка <span>12 000 р</span>

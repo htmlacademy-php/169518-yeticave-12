@@ -99,3 +99,11 @@ function date_finishing($finishing) {
     ];
     return($diff_array);
 }
+
+function show_error($content, $error) {
+    $content = include_template ('error.php', ['error' => $error]);
+}
+
+function getPostVal($name) {
+    return filter_input(INPUT_POST, $name);
+}
