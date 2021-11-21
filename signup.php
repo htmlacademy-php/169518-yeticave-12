@@ -120,7 +120,6 @@ function validate_email(mysqli $connection, array $new_user): bool {
     return false;
 }
 
-
 /**
  * save_user сохраняет данные пользователя в базу
  *
