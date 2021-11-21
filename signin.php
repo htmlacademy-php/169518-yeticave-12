@@ -11,42 +11,26 @@ require_once('src/validate.php');
  */
 $connection = database_get_connection();
 $categories = get_categories($connection);
-$cats_ids = array_column($categories, 'id');
+$items = get_lots($connection);
 $layout = templates_include_layout($is_auth, $user_name, $categories);
-$errors = [];
-$lot_id = null;
-
-
-if(request_is_post()) {
-    $add_lot = get_form_data();
-    $errors = validate_form_data($add_lot, array_column($categories, 'id'));
-    $uploading = request_save_file('lot-img');
-    $add_lot = validate_file($errors, $uploading, $add_lot);
-    if (empty($errors)) {
-        move_uploaded_file($uploading['tmp_name'], $add_lot['lot-img']);
-        $lot_id = save_lot($connection, $add_lot);
-
-        if (!is_null($lot_id)) {
-            header('Location: lot.php?id=' . $lot_id);
-            exit();
-        }
-    }
-}
 
 /*
  * Отображение - View
  */
-$content = include_template('add.php', [
-    'errors' => $errors,
-    'categories' => $categories
+
+
+$main_content = include_template ('main.php', [
+    'categories' => $categories, 
+    'items' => $items
 ]);
 
-$page_content = include_template('layout.php', [ 
+$page_content = include_template ('layout.php', [
+    'title' => 'YetiCave', 
+    'categories' => $categories, 
     'header' => $layout['header'], 
-    'top_menu' => $layout['top_menu'],  
-    'main_content' => $content, 
-    'single_lot_content' => '',
-    'categories' => $categories
+    'top_menu' => '', 
+    'main_content' => $main_content, 
+    'single_lot_content' => ''
 ]);
 
 print($page_content);

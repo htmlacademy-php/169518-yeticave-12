@@ -48,15 +48,3 @@ function request_save_file($param_name): array {
 }
 
 
-function get_form_data() {
-    return filter_input_array(INPUT_POST, [
-        'lot-name' => FILTER_DEFAULT, 
-        'lot-category' => FILTER_DEFAULT,
-        'lot-description' => FILTER_DEFAULT,
-        'lot-img' => FILTER_DEFAULT,
-        'lot-rate' => FILTER_DEFAULT,
-        'lot-step' => FILTER_DEFAULT,
-        'lot-date' => FILTER_DEFAULT
-    ], true);
-
-}

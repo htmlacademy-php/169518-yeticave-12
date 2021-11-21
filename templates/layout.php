@@ -2,6 +2,8 @@
 <?= $top_menu; ?>
 <?= $main_content; ?>
 <?= $single_lot_content; ?>
+
+</main>
 </div>
 <footer class="main-footer">
         <nav class="nav">

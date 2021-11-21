@@ -1,4 +1,5 @@
 
+<main>
 <nav class="nav">
         <ul class="nav__list container">
             <?php foreach ($categories as $category): ?>
@@ -8,4 +9,3 @@
             <?php endforeach; ?>
         </ul>
     </nav>
-    

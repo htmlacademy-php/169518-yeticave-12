@@ -1,5 +1,4 @@
-<main class="container">
-    <form name="add-lot" class="form form--add-lot container <?= !empty($errors) ? "form--invalid" : "" ?>" action="add.php"
+<form name="add-lot" class="form form--add-lot container <?= !empty($errors) ? "form--invalid" : "" ?>" action="add.php"
     method="post" enctype="multipart/form-data">
     <h2>Добавление лота</h2>
     <div class="form__container-two">
@@ -59,4 +58,4 @@
     <?php endif; ?>
     <button type="submit" class="button">Добавить лот</button>
 </form>
-</main>
+
