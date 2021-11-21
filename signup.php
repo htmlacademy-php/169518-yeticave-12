@@ -18,10 +18,7 @@ $user_id = null;
 if(request_is_post()) {
     $new_user = get_form_user_data();
     $errors = validate_form_user_data($new_user);
-    $email = mysqli_real_escape_string($connection, $new_user['new-user-email']);
-    $sql = "SELECT id FROM users WHERE email = '$email'";
-    $res = mysqli_query($connection, $sql);
-    if (mysqli_num_rows($res) > 0) {
+    if (validate_email($connection, $new_user)) {
         $errors['new-user-email'] = 'Пользователь с этим email уже зарегистрирован';
     }
     if (empty($errors)) {
@@ -66,8 +63,12 @@ function get_form_user_data() {
 
 }
 
-
-
+/**
+ * validate_form_user_data проверяет форму регистрации на ошибки
+ *
+ * @param  mixed $new_user массив с данными из формы регистрации нового пользователя
+ * @return array массив с ошибками
+ */
 function validate_form_user_data(array $new_user): array {
 
     $required = ['new-user-email', 'new-user-password', 'new-user-name', 'new-user-contact'];
@@ -102,7 +103,32 @@ function validate_form_user_data(array $new_user): array {
     return array_filter($errors);
 }
 
-function save_user(mysqli $connection, array $new_user) {
+/**
+ * validate_email проверяет, есть ли в базе этот имейл
+ *
+ * @param  mixed $connection соединение с базой данных
+ * @param  mixed $new_user массив с данными из формы регистрации нового пользователя
+ * @return bool
+ */
+function validate_email(mysqli $connection, array $new_user): bool {
+    $email = mysqli_real_escape_string($connection, $new_user['new-user-email']);
+    $sql = "SELECT id FROM users WHERE email = '$email'";
+    $res = mysqli_query($connection, $sql);
+    if (mysqli_num_rows($res) > 0) {
+        return true;
+    }
+    return false;
+}
+
+
+/**
+ * save_user сохраняет данные пользователя в базу
+ *
+ * @param  mixed $connection соединение с базой данных
+ * @param  mixed $new_user массив с данными из формы регистрации нового пользователя
+ * @return int айди нового пользователя
+ */
+function save_user(mysqli $connection, array $new_user): int {
     $result = 'INSERT INTO users (`email`, `pass`, `username`, `contact`) VALUES (?, ?, ?, ?)';
     $stmt = db_get_prepare_stmt($connection, $result, $new_user);
     $res = mysqli_stmt_execute($stmt);
