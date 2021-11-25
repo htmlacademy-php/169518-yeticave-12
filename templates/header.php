@@ -36,13 +36,14 @@
                     <?php if ($is_auth == 1): ?>
                     <ul class="user-menu__list">
                         <li class="user-menu__item">
-                            <a href="#">Регистрация</a>
+                            <a href="signup.php">Регистрация</a>
                         </li>
                         <li class="user-menu__item">
-                            <a href="#">Вход</a>
+                            <a href="signin.php">Вход</a>
                         </li>
                     </ul>
                     <?php endif ?>
                 </nav>
             </div>
         </header>
+         
