@@ -7,7 +7,7 @@ require_once('src/templates.php');
 $connection = database_get_connection();
 $categories = get_categories($connection);
 $items = get_lots($connection);
-$layout = templates_include_layout($is_auth, $user_name, $categories);
+$layout = templates_include_layout($user, $categories);
 
 if(is_get()) {
     $set_id = request_get_int('id');

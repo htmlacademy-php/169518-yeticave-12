@@ -12,11 +12,14 @@ require_once('src/validate.php');
 $connection = database_get_connection();
 $categories = get_categories($connection);
 $cats_ids = array_column($categories, 'id');
-$layout = templates_include_layout($is_auth, $user_name, $categories);
+$layout = templates_include_layout($user, $categories);
 $errors = [];
 $lot_id = null;
 
-
+if (!isset($_SESSION['user'])) {
+    header('HTTP/1.1 403 Forbidden');
+            exit();
+}
 if(request_is_post()) {
     $add_lot = get_form_data();
     $errors = validate_form_data($add_lot, array_column($categories, 'id'));
@@ -24,6 +27,7 @@ if(request_is_post()) {
     $add_lot = validate_file($errors, $uploading, $add_lot);
     if (empty($errors)) {
         move_uploaded_file($uploading['tmp_name'], $add_lot['lot-img']);
+        array_push($add_lot, $_SESSION['user']['id']);
         $lot_id = save_lot($connection, $add_lot);
 
         if (!is_null($lot_id)) {
@@ -118,7 +122,10 @@ function validate_form_data(array $add_lot, array $cats_ids): array {
 }
 
 function save_lot(mysqli $connection, array $add_lot): int {
-    $result = 'INSERT INTO lot (`create`, `heading`, `category_id`, `description`, `image`, `first_price`, `price_step`, `finish`, `user_id`) VALUES (NOW(), ?, ?, ?, ?, ?, ?, ?, 1)';
+
+    $result = 'INSERT INTO lot 
+    (`create`, `heading`, `category_id`, `description`, `image`, `first_price`, `price_step`, `finish`, `user_id`) 
+    VALUES (NOW(), ?, ?, ?, ?, ?, ?, ?, ?)';
     
     $stmt = db_get_prepare_stmt($connection, $result, $add_lot);
     $res = mysqli_stmt_execute($stmt);

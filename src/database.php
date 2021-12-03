@@ -11,9 +11,9 @@ define('DATABASE_BASE_NAME', 'yeticave');
 define('DATABASE_USER', 'root');
 define('DATABASE_PASSWORD', '');
 define('UPLOAD_MAX_SIZE', 2097152);
-$is_auth = rand(0, 1);
-$user_name = 'Olga'; // укажите здесь ваше имя
 
+session_start();
+$user = isset($_SESSION['user']) ? $_SESSION['user'] : [];
 /**
  * Connect to DB
  *

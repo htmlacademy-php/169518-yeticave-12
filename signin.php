@@ -11,26 +11,49 @@ require_once('src/validate.php');
  */
 $connection = database_get_connection();
 $categories = get_categories($connection);
-$items = get_lots($connection);
-$layout = templates_include_layout($is_auth, $user_name, $categories);
+$layout = templates_include_layout($user, $categories);
+$errors = [];
+
+if(request_is_post()) {
+    $login = $_POST;
+    $errors = validate_login_data($login);
+
+	$email = mysqli_real_escape_string($connection, $login['login-email']);
+
+	$sql = "SELECT * FROM users WHERE email = '$email'";
+	$res = mysqli_query($connection, $sql);
+    if(!$res) {
+        $errors['login-email'] = 'Неправильно введен электронный адрес';
+}
+	$logged = $res ? mysqli_fetch_array($res, MYSQLI_ASSOC) : null;
+
+
+    if (empty($errors)) {
+        if (!password_verify($login['login-password'], $logged['pass'])) {
+			$errors['login-password'] = 'Вы ввели неверный пароль';
+        }
+        else {
+        $_SESSION['user'] = $logged;
+        header('Location: index.php');
+        exit();
+        }
+    }
+}
 
 /*
  * Отображение - View
  */
-
-
-$main_content = include_template ('main.php', [
-    'categories' => $categories, 
-    'items' => $items
+$content = include_template('signin.php', [
+    'errors' => $errors,
+    'categories' => $categories
 ]);
 
-$page_content = include_template ('layout.php', [
-    'title' => 'YetiCave', 
-    'categories' => $categories, 
+$page_content = include_template('layout.php', [ 
     'header' => $layout['header'], 
-    'top_menu' => '', 
-    'main_content' => $main_content, 
-    'single_lot_content' => ''
+    'top_menu' => $layout['top_menu'],  
+    'main_content' => $content, 
+    'single_lot_content' => '',
+    'categories' => $categories
 ]);
 
 print($page_content);
@@ -38,73 +61,14 @@ print($page_content);
 /*
  * Бизнес-логика - Model
  */
-function get_form_data() {
-    return filter_input_array(INPUT_POST, [
-        'lot-name' => FILTER_DEFAULT, 
-        'lot-category' => FILTER_DEFAULT,
-        'lot-description' => FILTER_DEFAULT,
-        'lot-img' => FILTER_DEFAULT,
-        'lot-rate' => FILTER_DEFAULT,
-        'lot-step' => FILTER_DEFAULT,
-        'lot-date' => FILTER_DEFAULT
-    ], true);
-
-}
-
-function validate_file(array &$errors, array $uploading, array $add_lot): array
-{
-    if (!$uploading['success']) {
-        $errors['lot-img'] = $uploading['error'];
-    }
-    $add_lot['lot-img'] = $uploading['upload_name'];
-
-    return $add_lot;
-}
-
-function validate_form_data(array $add_lot, array $cats_ids): array {
-
-    $required = ['lot-name', 'lot-category', 'lot-description', 'lot-rate', 'lot-step', 'lot-date'];
+function validate_login_data($name) {
     $errors = [];
-
-    $rules = [
-        'lot-name' => function($value) {
-            return validate_length($value, 5, 200);
-        },
-        'lot-category' => function($value) use ($cats_ids) {
-            return validate_category($value, $cats_ids);
-        },
-        'lot-description' => function($value) {
-            return validate_length($value, 5, 3000);
-        },
-        'lot-rate' => function($value) {
-            return validate_numeric($value);
-        },
-        'lot-step' => function($value) {
-            return validate_numeric($value);
-        },
-        'lot-date' => function($value) {
-            return validate_date($value);
-        }
-    ];
-
-    foreach ($add_lot as $key => $value) {
-        if (isset($rules[$key])) {
-            $rule = $rules[$key];
-            $errors[$key] = $rule($value);
-        }
-
-        if (in_array($key, $required) && empty($value)) {
-            $errors[$key] = 'Это поле надо заполнить';
+	$required = ['login-email', 'login-password'];
+	foreach ($required as $field) {
+	    if (empty($name[$field])) {
+	        $errors[$field] = 'Это поле надо заполнить';
         }
     }
 
     return array_filter($errors);
-}
-
-function save_lot(mysqli $connection, array $add_lot): int {
-    $result = 'INSERT INTO lot (`create`, `heading`, `category_id`, `description`, `image`, `first_price`, `price_step`, `finish`, `user_id`) VALUES (NOW(), ?, ?, ?, ?, ?, ?, ?, 1)';
-    
-    $stmt = db_get_prepare_stmt($connection, $result, $add_lot);
-    $res = mysqli_stmt_execute($stmt);
-    return mysqli_insert_id($connection);
 }
