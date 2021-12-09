@@ -25,7 +25,7 @@
 
                 <nav class="user-menu">
 
-                    <?php if (!isset($_SESSION['user'])): ?>
+                    <?php if (!$user): ?>
                     <ul class="user-menu__list">
                         <li class="user-menu__item">
                             <a href="signup.php">Регистрация</a>

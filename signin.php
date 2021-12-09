@@ -14,20 +14,23 @@ $categories = get_categories($connection);
 $layout = templates_include_layout($user, $categories);
 $errors = [];
 
-if(request_is_post()) {
+if (request_is_post()) {
     $login = $_POST;
-    $errors = validate_login_data($login);
-
-	$email = mysqli_real_escape_string($connection, $login['login-email']);
-
-	$sql = "SELECT * FROM users WHERE email = '$email'";
-	$res = mysqli_query($connection, $sql);
-    if(!$res) {
-        $errors['login-email'] = 'Неправильно введен электронный адрес';
-}
-	$logged = $res ? mysqli_fetch_array($res, MYSQLI_ASSOC) : null;
-
-
+    $required = ['login-email', 'login-password'];
+	foreach ($required as $field) {
+	    if (empty($login[$field])) {
+	        $errors[$field] = 'Это поле надо заполнить';
+        }
+    }
+    if (empty($errors['login-email'])) {
+        $email = mysqli_real_escape_string($connection, $login['login-email']);
+        $sql = "SELECT * FROM users WHERE email = '$email'";
+        $res = mysqli_query($connection, $sql);
+        $logged = $res ? mysqli_fetch_array($res, MYSQLI_ASSOC) : null;
+            if ($logged == null) {
+                $errors['login-email'] = 'Неправильно введен электронный адрес';
+            }
+    }
     if (empty($errors)) {
         if (!password_verify($login['login-password'], $logged['pass'])) {
 			$errors['login-password'] = 'Вы ввели неверный пароль';
@@ -61,14 +64,3 @@ print($page_content);
 /*
  * Бизнес-логика - Model
  */
-function validate_login_data($name) {
-    $errors = [];
-	$required = ['login-email', 'login-password'];
-	foreach ($required as $field) {
-	    if (empty($name[$field])) {
-	        $errors[$field] = 'Это поле надо заполнить';
-        }
-    }
-
-    return array_filter($errors);
-}

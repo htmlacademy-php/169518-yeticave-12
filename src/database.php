@@ -1,5 +1,7 @@
 <?php
 
+require_once('src/session.php');
+
 /**
  * @file
  *
@@ -12,8 +14,7 @@ define('DATABASE_USER', 'root');
 define('DATABASE_PASSWORD', '');
 define('UPLOAD_MAX_SIZE', 2097152);
 
-session_start();
-$user = isset($_SESSION['user']) ? $_SESSION['user'] : [];
+
 /**
  * Connect to DB
  *

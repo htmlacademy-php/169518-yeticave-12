@@ -68,11 +68,11 @@ function get_form_user_data() {
  * validate_email проверяет, есть ли в базе этот имейл
  *
  * @param  mixed $connection соединение с базой данных
- * @param  mixed $new_user массив с данными из формы регистрации нового пользователя
+ * @param  string $new_user_email электронная почта нового юзера до проверки
  * @return bool
  */
-function validate_email(mysqli $connection, array $new_user): string {
-    $email = mysqli_real_escape_string($connection, $new_user['new-user-email']);
+function validate_email(mysqli $connection, string $new_user_email) {
+    $email = mysqli_real_escape_string($connection, $new_user_email);
     $sql = "SELECT id FROM users WHERE email = '$email'";
     $res = mysqli_query($connection, $sql);
     if (mysqli_num_rows($res) > 0) {
@@ -119,7 +119,7 @@ function validate_form_user_data(mysqli $connection, array $new_user): array {
 
     }
 if (empty($errors['new-user-email'])) {
-    $errors['new-user-email'] = validate_email($connection, $new_user);
+    $errors['new-user-email'] = validate_email($connection, $new_user['new-user-email']);
 }
     return array_filter($errors);
 }

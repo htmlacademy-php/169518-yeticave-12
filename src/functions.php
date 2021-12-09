@@ -101,9 +101,6 @@ function date_finishing($finishing) {
 }
 
 function show_error($content, $error) {
-    $content = include_template ('error.php', ['error' => $error]);
+    return include_template ('error.php', ['error' => $error]);
 }
 
-function getPostVal($name) {
-    return filter_input(INPUT_POST, $name);
-}
