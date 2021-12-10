@@ -11,16 +11,17 @@ require_once('src/validate.php');
  */
 $connection = database_get_connection();
 $categories = get_categories($connection);
-$layout = templates_include_layout($is_auth, $user_name, $categories);
+$layout = templates_include_layout($user, $categories);
 $errors = [];
 $user_id = null;
-
+if (isset($_SESSION['user'])) {
+    header('HTTP/1.1 403 Forbidden');
+            exit();
+}
 if(request_is_post()) {
     $new_user = get_form_user_data();
-    $errors = validate_form_user_data($new_user);
-    if (validate_email($connection, $new_user)) {
-        $errors['new-user-email'] = 'Пользователь с этим email уже зарегистрирован';
-    }
+    $errors = validate_form_user_data($connection, $new_user);
+    
     if (empty($errors)) {
         $new_user['new-user-password'] = password_hash($new_user['new-user-password'], PASSWORD_DEFAULT);
         $user_id = save_user($connection, $new_user);
@@ -64,15 +65,32 @@ function get_form_user_data() {
 }
 
 /**
+ * validate_email проверяет, есть ли в базе этот имейл
+ *
+ * @param  mixed $connection соединение с базой данных
+ * @param  string $new_user_email электронная почта нового юзера до проверки
+ * @return bool
+ */
+function validate_email(mysqli $connection, string $new_user_email) {
+    $email = mysqli_real_escape_string($connection, $new_user_email);
+    $sql = "SELECT id FROM users WHERE email = '$email'";
+    $res = mysqli_query($connection, $sql);
+    if (mysqli_num_rows($res) > 0) {
+        return 'Пользователь с этим email уже зарегистрирован';
+    }
+    return null;
+}
+
+/**
  * validate_form_user_data проверяет форму регистрации на ошибки
  *
- * @param  mixed $new_user массив с данными из формы регистрации нового пользователя
+ * @param array $connection связь с базой данных
+ * @param mixed $new_user массив с данными из формы регистрации нового пользователя
  * @return array массив с ошибками
  */
-function validate_form_user_data(array $new_user): array {
-
-    $required = ['new-user-email', 'new-user-password', 'new-user-name', 'new-user-contact'];
+function validate_form_user_data(mysqli $connection, array $new_user): array {
     $errors = [];
+    $required = ['new-user-email', 'new-user-password', 'new-user-name', 'new-user-contact'];
 
     $rules = [
         'new-user-email' => function($value) {
@@ -98,27 +116,15 @@ function validate_form_user_data(array $new_user): array {
         if (in_array($key, $required) && empty($value)) {
             $errors[$key] = 'Это поле надо заполнить';
         }
-    }
 
+    }
+if (empty($errors['new-user-email'])) {
+    $errors['new-user-email'] = validate_email($connection, $new_user['new-user-email']);
+}
     return array_filter($errors);
 }
 
-/**
- * validate_email проверяет, есть ли в базе этот имейл
- *
- * @param  mixed $connection соединение с базой данных
- * @param  mixed $new_user массив с данными из формы регистрации нового пользователя
- * @return bool
- */
-function validate_email(mysqli $connection, array $new_user): bool {
-    $email = mysqli_real_escape_string($connection, $new_user['new-user-email']);
-    $sql = "SELECT id FROM users WHERE email = '$email'";
-    $res = mysqli_query($connection, $sql);
-    if (mysqli_num_rows($res) > 0) {
-        return true;
-    }
-    return false;
-}
+
 
 /**
  * save_user сохраняет данные пользователя в базу
