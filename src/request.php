@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Проверяет, есть ли get-запрос
+ *
+ * @return bool
+ */
+function is_get(): bool {
+    return $_SERVER['REQUEST_METHOD'] == 'GET';
+}
+
 function request_is_post(): bool {
     return $_SERVER['REQUEST_METHOD'] == 'POST';
 }

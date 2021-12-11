@@ -15,11 +15,10 @@ $main_content = include_template ('main.php', [
     'items' => $items
 ]);
 
-$page_content = include_template ('layout.php', [
-    'title' => 'YetiCave', 
-    'categories' => $categories, 
+$page_content = include_template ('layout.php', [ 
     'header' => $layout['header'], 
     'top_menu' => '', 
+    'categories' => $categories,
     'main_content' => $main_content, 
     'single_lot_content' => ''
 ]);

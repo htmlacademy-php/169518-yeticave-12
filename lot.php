@@ -1,5 +1,6 @@
 <?php
 require_once('src/database.php');
+require_once('src/request.php');
 require_once('src/helpers.php');
 require_once('src/functions.php');
 require_once('src/templates.php');
@@ -8,7 +9,6 @@ require_once('src/templates.php');
  */
 $connection = database_get_connection();
 $categories = get_categories($connection);
-$items = get_lots($connection);
 $layout = templates_include_layout($user, $categories);
 /*
  * Отображение - View
@@ -16,13 +16,18 @@ $layout = templates_include_layout($user, $categories);
 if(is_get()) {
     $set_id = request_get_int('id');
     $single_item = show_lot($connection); 
-    if(isset($single_item)) {
+    if(!empty($single_item)) {
     $content = include_template ('single-lot.php', [
         'categories' => $categories, 
         'user' => $user,
         'single_item' => $single_item
     ]);
-    
+}
+else {
+    $content = include_template ('error.php', [
+        'error' => 'Нет такого лота'
+    ]);
+}
     $page_content = include_template ('layout.php', [
             'header' => $layout['header'], 
             'top_menu' => $layout['top_menu'], 
@@ -32,12 +37,7 @@ if(is_get()) {
         ]);
 
     print($page_content);
-    }
-    else {
-        $error = 'Данной страницы не существует на сайте';
-        show_error($content, $error);
-        }
-    }
+}
 
 else {
     header('HTTP/1.1 403 Forbidden');
@@ -45,14 +45,7 @@ else {
 /*
  * Бизнес-логика - Model
  */
-/**
- * Проверяет, есть ли get-запрос
- *
- * @return bool
- */
-function is_get(): bool {
-    return $_SERVER['REQUEST_METHOD'] == 'GET';
-}
+
 
 /**
  * Проверяет, какой id передан в get-запрос
