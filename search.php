@@ -11,7 +11,6 @@ require_once('src/functions.php');
 $connection = database_get_connection();
 $categories = get_categories($connection);
 $layout = templates_include_layout($user, $categories);
-$items = get_lots($connection);
 
 /*
  * Отображение - View
@@ -83,4 +82,3 @@ WHERE MATCH(`heading`, `description`) AGAINST(?) ORDER BY `create` DESC";
     $query = $res ? mysqli_fetch_all($res, MYSQLI_ASSOC) : [];
     return $query;
 }
-
