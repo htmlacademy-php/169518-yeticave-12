@@ -8,10 +8,9 @@
 <footer class="main-footer">
         <nav class="nav">
             <ul class="nav__list container">
-                <!--заполните этот список из массива категорий-->
                 <?php foreach ($categories as $category): ?>
                 <li class="nav__item">
-                    <a href="<?=htmlspecialchars($category['symbol']);?>"><?=htmlspecialchars($category['title']);?></a>
+                    <a href="category.php?name=<?=htmlspecialchars($category['symbol']);?>"><?=htmlspecialchars($category['title']);?></a>
                 </li>
                 <?php endforeach; ?>
             </ul>

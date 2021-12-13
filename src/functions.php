@@ -100,7 +100,7 @@ function date_finishing($finishing) {
     return($diff_array);
 }
 
-function show_error($content, $error) {
-    return include_template ('error.php', ['error' => $error]);
-}
+// function show_error($content, $error) {
+//    return include_template ('error.php', ['error' => $error]);
+//}
 

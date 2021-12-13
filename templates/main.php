@@ -8,7 +8,7 @@
         <?php foreach ($categories as $category): ?>
         <li class="promo__item promo__item--<?=htmlspecialchars($category['symbol']);?>">
             <a class="promo__link"
-                href="<?=htmlspecialchars($category['symbol']);?>"><?=htmlspecialchars($category['title']);?></a>
+                href="category.php?name=<?=htmlspecialchars($category['symbol']);?>"><?=htmlspecialchars($category['title']);?></a>
         </li>
         <?php endforeach; ?>
 
