@@ -10,7 +10,7 @@ $categories = get_categories($connection);
 $items = get_lots($connection);
 $layout = templates_include_layout($user, $categories);
 
-$main_content = include_template ('main.php', [
+$content = include_template ('main.php', [
     'categories' => $categories, 
     'items' => $items
 ]);
@@ -19,8 +19,7 @@ $page_content = include_template ('layout.php', [
     'header' => $layout['header'], 
     'top_menu' => '', 
     'categories' => $categories,
-    'main_content' => $main_content, 
-    'single_lot_content' => ''
+    'content' => $content
 ]);
 
 print($page_content);

@@ -44,8 +44,7 @@ $content = include_template('signup.php', [
 $page_content = include_template('layout.php', [ 
     'header' => $layout['header'], 
     'top_menu' => $layout['top_menu'],  
-    'main_content' => $content, 
-    'single_lot_content' => '',
+    'content' => $content, 
     'categories' => $categories
 ]);
 
@@ -136,6 +135,6 @@ if (empty($errors['new-user-email'])) {
 function save_user(mysqli $connection, array $new_user): int {
     $result = 'INSERT INTO users (`email`, `pass`, `username`, `contact`) VALUES (?, ?, ?, ?)';
     $stmt = db_get_prepare_stmt($connection, $result, $new_user);
-    $res = mysqli_stmt_execute($stmt);
+    mysqli_stmt_execute($stmt);
     return mysqli_insert_id($connection);
 }

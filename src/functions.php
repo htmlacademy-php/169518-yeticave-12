@@ -53,7 +53,7 @@ LEFT JOIN
 (SELECT `bet_lot_id`, COUNT(`bet_lot_id`) AS `count_bets`, MAX(`price`) AS `max_price` FROM bet GROUP BY `bet_lot_id`) b ON
 l.`id` = b.`bet_lot_id`
 WHERE
-	l.`finish` > CURDATE()
+	l.`finish` > NOW()
 ORDER BY
 	`create` DESC";
 
@@ -99,6 +99,7 @@ function date_finishing($finishing) {
     ];
     return($diff_array);
 }
+
 
 // function show_error($content, $error) {
 //    return include_template ('error.php', ['error' => $error]);

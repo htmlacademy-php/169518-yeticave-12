@@ -40,8 +40,7 @@ $page_content = include_template('layout.php', [
     'header' => $layout['header'], 
     'top_menu' => $layout['top_menu'], 
     'categories' => $categories, 
-    'main_content' => '', 
-    'single_lot_content' => $content
+    'content' => $content
 ]);
 
 print($page_content);
