@@ -163,6 +163,7 @@ l.`id` = b.`bet_lot_id`
     WHERE l.`id` = ?
     ORDER BY
 	b.`date` DESC";  
+    
     $stmt = db_get_prepare_stmt($connection, $sql_bets_in_lot, [$lot_id]);
     mysqli_stmt_execute($stmt);
     $result_bets = mysqli_stmt_get_result($stmt);
@@ -171,7 +172,7 @@ l.`id` = b.`bet_lot_id`
 }
 
 
-function save_bet(mysqli $connection, array $add_bet) {
+function save_bet(mysqli $connection, array $add_bet): int {
 
     $result = 'INSERT INTO bet (`date`, `price`, `bet_lot_id`, `bet_user_id`)
     VALUES (NOW(), ?, ?, ?)';

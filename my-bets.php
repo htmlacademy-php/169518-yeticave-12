@@ -98,9 +98,9 @@ return $winner_arr;
 
 function show_classes(array $bet_id_and_price, array $winning_bets): array {
     $class = [];
-    foreach ($winning_bets as $parameter => $value) {
-    if (htmlspecialchars($bet_id_and_price['id']) === htmlspecialchars($value['ended'])) {
-        if (htmlspecialchars($bet_id_and_price['price']) === htmlspecialchars($value['max_price'])) {
+    foreach ($winning_bets as $bet) {
+    if (htmlspecialchars($bet_id_and_price['id']) === htmlspecialchars($bet['ended'])) {
+        if (htmlspecialchars($bet_id_and_price['price']) === htmlspecialchars($bet['max_price'])) {
             $class['item-end'] = 'rates__item--win';
             $class['timer-end'] = 'timer--win';
         }

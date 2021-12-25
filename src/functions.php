@@ -33,10 +33,10 @@ function get_bid_text(?int $count): string
  * @param string $price целое число
  * @return $format_price . " ₽" отформатированная сумма вместе со знаком рубля
  */
-function auction_price($price) {
+function auction_price(string $price): string {
     $format_price = ceil($price);
     $format_price = number_format($format_price, 0, ' ', ' ');
-    return $format_price . " ₽";
+    return $format_price . ' ₽';
 }
 /**
  * Выводит разницу во времени в формате 'ЧЧ:ММ'
@@ -44,7 +44,7 @@ function auction_price($price) {
  * @param string $finishing дата в формате 'ГГГГ-ММ-ДД'
  * @return array $diff_array массив, где первый элемент — целое количество часов до даты, а второй — остаток в минутах
  */
-function date_finishing($finishing) {
+function date_finishing(string $finishing): array {
     $date_now = date_create('now');
     $date_finishing = date_create($finishing);
     $diff = (array) date_diff($date_now, $date_finishing);
@@ -62,7 +62,7 @@ function date_finishing($finishing) {
  * @param  mixed $bet забирает дату ставки из базы
  * Возвращает строку или ничего, если прошло больше суток с момента ставки
  */
-function bet_duration($bet): ?string {
+function bet_duration(string $bet): ?string {
     $bet_date_format = date_create($bet);
     $hours_minutes = date_format($bet_date_format, 'H:i');
     $bet_date = date_finishing($bet);
