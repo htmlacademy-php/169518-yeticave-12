@@ -11,6 +11,7 @@ require_once('src/templates.php');
 $connection = database_get_connection();
 $categories = get_categories($connection);
 $layout = templates_include_layout($user, $categories);
+$lot_id = request_get_int('id');
 $errors = [];
 /*
  * Отображение - View
@@ -18,9 +19,8 @@ $errors = [];
 
 
 if(is_get()) {
-    $set_id = request_get_int('id');
-    $single_item = show_lot($connection); 
-    $bets = show_bets($connection);
+    $single_item = get_single_lot($connection, $lot_id); 
+    $bets = get_lot_bets($connection, $lot_id);
     if(!empty($single_item)) {
     $content = include_template ('single-lot.php', [
         'categories' => $categories, 
@@ -116,7 +116,7 @@ function request_get_int(string $name): int {
  * @param  mixed $connection соединение с базой
  * @return array данные лота
  */
-function show_lot(mysqli $connection): array {
+function get_single_lot(mysqli $connection, int $lot_id): array {
     $sql_single_lot = "SELECT
     l.`id`,
     l.`user_id`,
@@ -142,14 +142,13 @@ LEFT JOIN
 l.`id` = b.`bet_lot_id`
     WHERE l.`id` = ?";
         
-    $single_lot_id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
-    $stmt = db_get_prepare_stmt($connection, $sql_single_lot, [$single_lot_id]);
+    $stmt = db_get_prepare_stmt($connection, $sql_single_lot, [$lot_id]);
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
     return mysqli_fetch_array($res, MYSQLI_ASSOC) ?? [];
 }
 
-function show_bets(mysqli $connection): array {
+function get_lot_bets(mysqli $connection, int $lot_id): array {
     $sql_bets_in_lot = "SELECT 
     b.`price`,
     b.`date`,
@@ -163,15 +162,13 @@ u.`id` = b.`bet_user_id`
 l.`id` = b.`bet_lot_id`
     WHERE l.`id` = ?
     ORDER BY
-	b.`date` DESC";
-    $this_lot_bets = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);  
-    $stmt = db_get_prepare_stmt($connection, $sql_bets_in_lot, [$this_lot_bets]);
+	b.`date` DESC";  
+    $stmt = db_get_prepare_stmt($connection, $sql_bets_in_lot, [$lot_id]);
     mysqli_stmt_execute($stmt);
     $result_bets = mysqli_stmt_get_result($stmt);
     $showbets = $result_bets ? mysqli_fetch_all($result_bets, MYSQLI_ASSOC) : [];
     return $showbets;
 }
-
 
 
 function save_bet(mysqli $connection, array $add_bet) {

@@ -121,36 +121,6 @@ function get_noun_plural_form (int $number, string $one, string $two, string $ma
 }
 
 /**
- * Показывает, сколько часов или минут назад сделана ставка: минут - если прошло меньше часа, часов - если прошло меньше суток. 
- * Если ставка была сделана вчера, пишет 'Вчера'
- *
- * @param  mixed $bet забирает дату ставки из базы
- * Возвращает строку или ничего, если прошло больше суток с момента ставки
- */
-function bet_duration($bet) {
-    $bet_date = date_finishing($bet);
-    $now = date_create('now');
-    $hour_now = date_format($now, 'H');
-    $min = (int)$bet_date['minutes'];
-    $hour = (int)$bet_date['hours'];
-    if (in_array($hour, range(0, $hour_now))) {
-        if ($bet_date['hours'] === '00') {
-            return $min . ' ' . get_noun_plural_form($min, 'минута', 'минуты', 'минут') . ' назад'; 
-        }
-        else {   
-            return $hour . ' ' . get_noun_plural_form($hour, 'час', 'часа', 'часов') . ' назад';
-        }
-    }
-    elseif (in_array($hour, range($hour_now, $hour_now + 24))) {
-        return 'Вчера';
-    }
-    else {
-        return null;
-    }
-}
-
-
-/**
  * Подключает шаблон, передает туда данные и возвращает итоговый HTML контент
  * @param string $name Путь к файлу шаблона относительно папки templates
  * @param array $data Ассоциативный массив с данными для шаблона

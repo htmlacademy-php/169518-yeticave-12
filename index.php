@@ -23,3 +23,50 @@ $page_content = include_template ('layout.php', [
 ]);
 
 print($page_content);
+
+/**
+ * @param mysqli $connection
+ * @return array [
+ *  [
+ *      'id' => int,
+ *      'create' => string,
+ *      'heading' => string,
+ *      'first_price' => int,
+ *      'price_step' => int,
+ *      'finish' => string,
+ *      'image' => string,
+ *      'title => string
+ *  ],
+ *  ...
+ * ]
+ */
+function get_lots(mysqli $connection): array
+{
+    $sql_items = "
+    SELECT
+	l.`id`,
+	l.`create`,
+	l.`heading`,
+	IFNULL(b.`max_price`, l.`first_price`) `price`,
+    l.`price_step`,
+	l.`finish`,
+	l.`image`,
+	c.`title`,
+	b.`count_bets`
+FROM
+	lot l
+JOIN category c ON
+	l.`category_id` = c.`id`
+LEFT JOIN 
+(SELECT `bet_lot_id`, COUNT(`bet_lot_id`) AS `count_bets`, MAX(`price`) AS `max_price` FROM bet GROUP BY `bet_lot_id`) b ON
+l.`id` = b.`bet_lot_id`
+WHERE
+	l.`finish` > NOW()
+ORDER BY
+	`create` DESC";
+
+    $result_items = mysqli_query($connection, $sql_items);
+    $items = $result_items ? mysqli_fetch_all($result_items, MYSQLI_ASSOC) : [];
+
+    return $items;
+}

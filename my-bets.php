@@ -72,34 +72,35 @@ function get_my_bets(mysqli $connection): array
     ORDER BY
         b.`date` DESC";
 
-$this_user_id = $_SESSION['user']['id'];  
-$stmt = db_get_prepare_stmt($connection, $sql_my_bets, [$this_user_id]);
-mysqli_stmt_execute($stmt);
-$result_my_bets = mysqli_stmt_get_result($stmt);
-$show_my_bets = $result_my_bets ? mysqli_fetch_all($result_my_bets, MYSQLI_ASSOC) : [];
+    $this_user_id = $_SESSION['user']['id'];  
+    $stmt = db_get_prepare_stmt($connection, $sql_my_bets, [$this_user_id]);
+    mysqli_stmt_execute($stmt);
+    $result_my_bets = mysqli_stmt_get_result($stmt);
+    $show_my_bets = $result_my_bets ? mysqli_fetch_all($result_my_bets, MYSQLI_ASSOC) : [];
 return $show_my_bets;
 }
 
 function get_winner(mysqli $connection): array {
     $sql_winner_bet = "
     SELECT 
-b.`bet_lot_id` AS `ended`, 
-MAX(b.`price`) AS `max_price` 
-FROM bet b JOIN lot l 
-ON b.`bet_lot_id` = l.`id` 
-WHERE l.`finish` < NOW()
-GROUP BY b.`bet_lot_id`";
-$result_winner = mysqli_query($connection, $sql_winner_bet);
-$winner_arr = $result_winner ? mysqli_fetch_all($result_winner, MYSQLI_ASSOC) : [];
+    b.`bet_lot_id` AS `ended`, 
+    MAX(b.`price`) AS `max_price` 
+    FROM bet b JOIN lot l 
+    ON b.`bet_lot_id` = l.`id` 
+    WHERE l.`finish` < NOW()
+    GROUP BY b.`bet_lot_id`";
+
+    $result_winner = mysqli_query($connection, $sql_winner_bet);
+    $winner_arr = $result_winner ? mysqli_fetch_all($result_winner, MYSQLI_ASSOC) : [];
 
 return $winner_arr;
 }
 
-function show_classes(array $arr1, array $arr2) {
+function show_classes(array $bet_id_and_price, array $winning_bets): array {
     $class = [];
-    foreach ($arr2 as $key => $val) {
-    if (htmlspecialchars($arr1['id']) === htmlspecialchars($val['ended'])) {
-        if (htmlspecialchars($arr1['price']) === htmlspecialchars($val['max_price'])) {
+    foreach ($winning_bets as $parameter => $value) {
+    if (htmlspecialchars($bet_id_and_price['id']) === htmlspecialchars($value['ended'])) {
+        if (htmlspecialchars($bet_id_and_price['price']) === htmlspecialchars($value['max_price'])) {
             $class['item-end'] = 'rates__item--win';
             $class['timer-end'] = 'timer--win';
         }
