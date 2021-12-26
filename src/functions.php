@@ -1,5 +1,17 @@
 <?php
 
+function templates_include_layout(array $user, array $categories) {
+    return [
+        'header' => include_template('header.php', [
+            'title' => 'YetiCave',
+            'user' => $user
+        ]),
+        'top_menu' => include_template('top-menu.php', [
+            'categories' => $categories
+        ])
+    ];
+}
+
 /**
  * @param mysqli $connection
  * @return array [
@@ -15,8 +27,6 @@ function get_categories(mysqli $connection): array
 
     return $categories;
 }
-
-
 
 /**
  * @param int $count number of bids
@@ -38,6 +48,7 @@ function auction_price(string $price): string {
     $format_price = number_format($format_price, 0, ' ', ' ');
     return $format_price . ' ₽';
 }
+
 /**
  * Выводит разницу во времени в формате 'ЧЧ:ММ'
  *

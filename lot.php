@@ -4,7 +4,7 @@ require_once('src/request.php');
 require_once('src/helpers.php');
 require_once('src/functions.php');
 require_once('src/validate.php');
-require_once('src/templates.php');
+
 /*
  * Получение данных - Controller
  */
