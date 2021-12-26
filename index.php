@@ -2,8 +2,9 @@
 require_once('src/database.php');
 require_once('src/helpers.php');
 require_once('src/functions.php');
-require_once('src/templates.php');
 require_once('src/validate.php');
+
+require('getwinner.php');
 
 $connection = database_get_connection();
 $categories = get_categories($connection);

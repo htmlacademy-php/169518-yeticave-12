@@ -1,6 +1,5 @@
 <?php
 require_once('src/database.php');
-require_once('src/templates.php');
 require_once('src/request.php');
 require_once('src/helpers.php');
 require_once('src/functions.php');
