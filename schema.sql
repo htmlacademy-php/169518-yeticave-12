@@ -40,4 +40,5 @@ CREATE TABLE bet (
     FOREIGN KEY (`bet_lot_id`) REFERENCES lot(`id`),
     FOREIGN KEY (`bet_user_id`) REFERENCES users(`id`)
 );
+CREATE INDEX bet_price ON bet(`price`);
 CREATE FULLTEXT INDEX lot_search ON lot(`heading`, `description`);

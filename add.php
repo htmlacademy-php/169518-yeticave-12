@@ -48,8 +48,7 @@ $content = include_template('add.php', [
 $page_content = include_template('layout.php', [ 
     'header' => $layout['header'], 
     'top_menu' => $layout['top_menu'],  
-    'main_content' => $content, 
-    'single_lot_content' => '',
+    'content' => $content, 
     'categories' => $categories
 ]);
 
@@ -156,6 +155,6 @@ function save_lot(mysqli $connection, array $add_lot): int {
     VALUES (NOW(), ?, ?, ?, ?, ?, ?, ?, ?)';
     
     $stmt = db_get_prepare_stmt($connection, $result, $add_lot);
-    $res = mysqli_stmt_execute($stmt);
+    mysqli_stmt_execute($stmt);
     return mysqli_insert_id($connection);
 }

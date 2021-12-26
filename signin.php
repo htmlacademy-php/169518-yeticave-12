@@ -54,8 +54,7 @@ $content = include_template('signin.php', [
 $page_content = include_template('layout.php', [ 
     'header' => $layout['header'], 
     'top_menu' => $layout['top_menu'],  
-    'main_content' => $content, 
-    'single_lot_content' => '',
+    'content' => $content, 
     'categories' => $categories
 ]);
 

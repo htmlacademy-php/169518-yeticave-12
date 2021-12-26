@@ -1,7 +1,6 @@
 <?= $header; ?>
 <?= $top_menu; ?>
-<?= $main_content; ?>
-<?= $single_lot_content; ?>
+<?= $content; ?>
 
 </main>
 </div>
