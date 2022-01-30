@@ -19,7 +19,8 @@ if (!isset($_SESSION['user'])) {
 }
 else {
     $user_bets = get_my_bets($connection);
-    $winner = get_winner($connection);   
+    $winner = get_winner($connection); 
+  
 }
 
 /*
@@ -80,6 +81,7 @@ return $show_my_bets;
 }
 
 function get_winner(mysqli $connection): array {
+    
     $sql_winner_bet = "
     SELECT 
     b.`bet_lot_id` AS `ended`, 

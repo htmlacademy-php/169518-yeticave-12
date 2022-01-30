@@ -11,7 +11,7 @@
         </div>
         <div class="lot-item__right">
             <div class="lot-item__state">
-            <?php if ($single_item['diff'] > 0) : ?>
+            <?php if ($single_item['diff'] > '00:00:00') : ?>
                 <?php $time_rest = date_finishing(htmlspecialchars($single_item['finish'])); ?>
                 <div class="lot-item__timer timer <?=($time_rest['hours'] === '00') ? 'timer--finishing' : '' ?>">
                     <?=$time_rest['hours']; ?> : <?=$time_rest['minutes']; ?>
@@ -21,14 +21,14 @@
                 <?php endif ?>
                 <div class="lot-item__cost-state">
                     <div class="lot-item__rate">
-                        <span class="lot-item__amount"><?= ($single_item['diff'] > 0)  ? 'Текущая цена' : 'Выигравшая ставка' ?></span>
+                        <span class="lot-item__amount"><?= ($single_item['diff'] > '00:00:00')  ? 'Текущая цена' : 'Выигравшая ставка' ?></span>
                         <span class="lot-item__cost"><?=htmlspecialchars($single_item['price']); ?> ₽</span>
                     </div>
-                    <div class="lot-item__min-cost" <?= ($single_item['diff'] > 0)  ? '' : 'style="display:none;"' ?>>
+                    <div class="lot-item__min-cost" <?= ($single_item['diff'] > '00:00:00')  ? '' : 'style="display:none;"' ?>>
                         Мин. ставка <span><?=htmlspecialchars($single_item['min_bet']); ?></span>
                     </div>
                 </div>
-                <?php if ($user && $single_item['diff'] > 0) : ?>
+                <?php if ($user && $single_item['diff'] > '00:00:00') : ?>
                     <form class="lot-item__form" action="lot.php?id=<?=htmlspecialchars($single_item['id']); ?>" method="post" autocomplete="off">
                     <?php if (htmlspecialchars($user['id']) === htmlspecialchars($single_item['user_id'])) : ?>
                             <p>Вы не можете делать ставки на свой лот</p>

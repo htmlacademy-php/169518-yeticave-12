@@ -21,7 +21,7 @@
                 <?=htmlspecialchars($val['title']);?>
             </td>
             <td class="rates__timer">
-                <?php if ($val['diff'] > 0) : ?>
+                <?php if ($val['diff'] > '00:00:00') : ?>
                 <div class="timer <?= ($time_rest['hours'] === '00') ? 'timer--finishing' : ' ' ?>">
                     <?=$time_rest['hours']; ?> : <?= $time_rest['minutes']; ?>
                 </div>
