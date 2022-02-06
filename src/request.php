@@ -50,7 +50,6 @@ function request_save_file($param_name): array {
         return $result_save_file;
     }
 
-	
     $result_save_file['tmp_name'] = $tmp_name;
     $result_save_file['upload_name'] = 'uploads/' . $filename; 
     return $result_save_file;

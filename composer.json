@@ -1,0 +1,16 @@
+{
+    "name": "morozovaolga/yeticave",
+    "description": "mountain staff sale",
+    "type": "project",
+    "license": "mit",
+    "authors": [
+        {
+            "name": "morozovaolga",
+            "email": "morozova31@ya.ru"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "symfony/mailer": "5.4.x-dev"
+    }
+}

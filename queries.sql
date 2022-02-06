@@ -53,5 +53,8 @@ UPDATE lot
 SET `heading` = '2020 Ботинки для сноуборда DC Mutiny Charocal'
 WHERE `id` = 4;
 
+-- записываю id победителя в таблицу lot
+UPDATE lot SET `winner_user_id` = ? WHERE `id` = ?;
+
 -- увеличить время закрытия лота на неделю
 -- UPDATE lot SET finish = DATE_ADD(finish, INTERVAL 21 DAY);
