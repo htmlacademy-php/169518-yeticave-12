@@ -13,25 +13,22 @@ $transport = Transport::fromDsn($dsn);
 
 $connection = database_get_connection();
 $finished_lots = find_finished_lots($connection);
-
 if(!empty($finished_lots)) {
 
 foreach($finished_lots as $arr) {
     foreach($arr as $key => $lot_id) {
         $lot_id = (int) $lot_id;
-        $winner_arr = find_lot_winner($connection, $lot_id);
-        foreach($winner_arr as $winner) {
-            $message = new Email();
-            $message->to($winner['email']);
-            $message->from('keks@phpdemo.ru');
-            $message->subject('Ваша ставка победила');
-            $msg_content = include_template('email.php', ['winner' => $winner]);
-            $message->html($msg_content, 'text/html');
-            $mailer = new Mailer($transport);
-            $mailer->send($message);
-        } 
-        $winner_id = $winner_arr[0]['bet_user_id'];
-        set_lot_winner($connection, $winner_id, $lot_id);
+        $winner = find_lot_winner($connection, $lot_id);
+        $message = new Email();
+        $message->to($winner['email']);
+        $message->from('keks@phpdemo.ru');
+        $message->subject('Ваша ставка победила');
+        $msg_content = include_template('email.php', ['winner' => $winner]);
+        $message->html($msg_content, 'text/html');
+        $mailer = new Mailer($transport);
+        $mailer->send($message);
+        $new_winner_id = $winner['bet_user_id'];
+        set_lot_winner($connection, $new_winner_id, $lot_id);
     }
 }
 }
@@ -66,7 +63,7 @@ function find_lot_winner(mysqli $connection, int $lot_id): array {
     $stmt = db_get_prepare_stmt($connection, $sql, [$lot_id]);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
-    $winners_list = $result ? mysqli_fetch_all($result, MYSQLI_ASSOC) : [];
+    $winners_list = $result ? mysqli_fetch_array($result, MYSQLI_ASSOC) : [];
     return $winners_list;
 }
 
