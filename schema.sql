@@ -27,6 +27,7 @@ CREATE TABLE lot (
     `price_step` INT NOT NULL,
     `category_id` INT NOT NULL,
     `user_id` INT NOT NULL,
+     `winner_user_id` INT NULL,
     FOREIGN KEY (`category_id`) REFERENCES category(`id`),
     FOREIGN KEY (`user_id`) REFERENCES users(`id`)
 );
