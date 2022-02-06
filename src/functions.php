@@ -96,3 +96,4 @@ function bet_duration(string $bet): ?string {
         return null;
     }
 }
+
