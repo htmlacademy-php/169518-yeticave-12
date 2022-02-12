@@ -11,7 +11,7 @@ $connection = database_get_connection();
 $categories = get_categories($connection);
 $layout = templates_include_layout($user, $categories);
 $cur_page = $_GET['page'] ?? 1;
-$page_items = 3;
+$page_items = 9;
 $offset = ($cur_page - 1) * $page_items;
 /*
  * Отображение - View
