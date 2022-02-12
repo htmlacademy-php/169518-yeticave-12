@@ -10,7 +10,7 @@ $connection = database_get_connection();
 $categories = get_categories($connection);
 
 $cur_page = $_GET['page'] ?? 1;
-$page_items = 3;
+$page_items = 9;
 $offset = ($cur_page - 1) * $page_items;
 $items_count = get_lots($connection, $page_items, $offset)['num'];
 $pages_count = ceil($items_count / $page_items);
