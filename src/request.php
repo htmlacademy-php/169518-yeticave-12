@@ -9,14 +9,32 @@ function is_get(): bool {
     return $_SERVER['REQUEST_METHOD'] == 'GET';
 }
 
+/**
+ * Проверяет, есть ли post-запрос
+ *
+ * @return bool
+ */
 function request_is_post(): bool {
     return $_SERVER['REQUEST_METHOD'] == 'POST';
 }
 
+/**
+ * Берет имя из post-запроса
+ *
+ * @param  string $name
+ * @return void
+ */
 function request_get_post_val($name) {
     return filter_input(INPUT_POST, $name);
 }
 
+/**
+ * Загружает изображение на сервер, дает ему имя, обрабатывает ошибки 
+ * (превышен максимальный размер файла, файл в неподдерживаемом формате)
+ *
+ * @param string $param_name
+ * @return array $result_save_file со статусом загрузки, именем файла и типом ошибки
+ */
 function request_save_file($param_name): array {
     $result_save_file = [
         'success' => true,

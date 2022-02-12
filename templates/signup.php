@@ -1,10 +1,7 @@
 <form name="new-user" class="form container <?= !empty($errors) ? "form--invalid" : "" ?>" action="signup.php"
     method="post" autocomplete="off">
-    <!-- form
-    --invalid -->
     <h2>Регистрация нового аккаунта</h2>
     <div class="form__item <?= isset($errors['new-user-email']) ? "form__item--invalid" : "" ?>">
-        <!-- form__item--invalid -->
         <label for="email">E-mail <sup>*</sup></label>
         <input id="email" type="text" name="new-user-email" placeholder="Введите e-mail"
             value="<?= request_get_post_val('new-user-email'); ?>">

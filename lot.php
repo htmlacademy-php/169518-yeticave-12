@@ -153,7 +153,8 @@ function get_lot_bets(mysqli $connection, int $lot_id): array {
     b.`price`,
     b.`date`,
     u.`username`,
-    DATE_FORMAT(`date`, '%d.%m.%y в %H:%i') as `new_date`,
+    b.`bet_user_id`,
+    DATE_FORMAT(`date`, '%d.%m.%y в %H:%i') AS `new_date`,
     TIMESTAMPDIFF(minute, b.`date`, NOW()) AS `duration` 
     FROM bet b 
     JOIN users u ON

@@ -1,5 +1,13 @@
 <?php 
 
+/**
+ * Проверяет длину введенного текста
+ *
+ * @param  mixed $name текст
+ * @param  mixed $min минимальная длина
+ * @param  mixed $max максимальная длина
+ * @return сообщение об ошибке, если текст не отвечает условию, или null
+ */
 function validate_length($name, $min, $max) {
     $len = strlen($name);
 
@@ -9,6 +17,12 @@ function validate_length($name, $min, $max) {
     return null;
 }
 
+/**
+ * Проверяет, что ввели число и оно больше нуля
+ *
+ * @param  mixed $name
+ * @return сообщение об ошибке или null
+ */
 function validate_numeric($name) {
 
     if (!is_numeric($name)) {
@@ -20,6 +34,12 @@ function validate_numeric($name) {
     return null;
 }
 
+/**
+ * Проверяет, что введенная дата отвечает условию — на день больше момента заполнения формы
+ *
+ * @param  mixed $name
+ * @return сообщение об ошибке или null
+ */
 function validate_date($name) {
     $date_tomorrow = date_create('tomorrow');
     $date_ending = date_create($name);
@@ -29,6 +49,13 @@ function validate_date($name) {
    return null;
 }
 
+/**
+ * Проверяет, есть ли введенная категория в списке
+ *
+ * @param  string $cat_name
+ * @param  array $allowed_list
+ * @return сообщение об ошибке или null
+ */
 function validate_category($cat_name, $allowed_list) {
     if (!in_array($cat_name, $allowed_list)) {
         return 'Укажите категорию';

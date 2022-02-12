@@ -45,6 +45,12 @@ print($page_content);
  * Бизнес-логика - Model
  */
 
+/**
+ * Выводит из бд ставки конкретного юзера
+ *
+ * @param  mixed $connection
+ * @return array массив с отфильтрованными данными о ставках одного юзера
+ */
 function get_my_bets(mysqli $connection): array
 {
     $sql_my_bets = "
@@ -80,6 +86,12 @@ function get_my_bets(mysqli $connection): array
 return $show_my_bets;
 }
 
+/**
+ * Определяет победившие ставки
+ *
+ * @param  mixed $connection
+ * @return array $winner_arr
+ */
 function get_winner(mysqli $connection): array {
     
     $sql_winner_bet = "
@@ -97,6 +109,13 @@ function get_winner(mysqli $connection): array {
 return $winner_arr;
 }
 
+/**
+ * Показывает css-классы в зависимости от статуса ставки
+ *
+ * @param  array $bet_id_and_price
+ * @param  array $winning_bets
+ * @return array классы, которые нужно показать
+ */
 function show_classes(array $bet_id_and_price, array $winning_bets): array {
     $class = [];
     foreach ($winning_bets as $bet) {
