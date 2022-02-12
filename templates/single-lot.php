@@ -3,7 +3,7 @@
     <div class="lot-item__content">
         <div class="lot-item__left">
             <div class="lot-item__image">
-                <img src="<?=htmlspecialchars($single_item['image']); ?>" width="730" height="548" alt="Сноуборд">
+                <img src="<?=htmlspecialchars($single_item['image']); ?>" width="730" height="548" alt="<?=htmlspecialchars($single_item['heading']); ?>">
             </div>
             <p class="lot-item__category">Категория:
                 <span><?=htmlspecialchars($single_item['title']); ?></span></p>
@@ -32,12 +32,14 @@
                     <form class="lot-item__form" action="lot.php?id=<?=htmlspecialchars($single_item['id']); ?>" method="post" autocomplete="off">
                     <?php if (htmlspecialchars($user['id']) === htmlspecialchars($single_item['user_id'])) : ?>
                             <p>Вы не можете делать ставки на свой лот</p>
+                            <?php elseif (htmlspecialchars($user['id']) === htmlspecialchars($bets[0]['bet_user_id'])) : ?>
+                            <p>Вы не можете делать две ставки подряд</p>
                             <?php else : ?>
                         <p class="lot-item__form-item form__item <?= isset($errors['new-bet']) ? "form__item--invalid" : "" ?>">
                         
                         <label for="cost">Ваша ставка</label>
                             <input id="new-bet" type="text" name="new-bet" placeholder="<?=htmlspecialchars($single_item['min_bet']); ?>">
-                            <span class="form__error"><?= $errors['new-bet'] ?? ""; ?></span>
+                            <span class="form__error"><?= $errors['new-bet'] ?? ''; ?></span>
                         </p>
                         <button type="submit" class="button">Сделать ставку</button>
                         <?php endif ?>

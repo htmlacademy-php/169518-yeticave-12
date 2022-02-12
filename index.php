@@ -8,12 +8,22 @@ require('getwinner.php');
 
 $connection = database_get_connection();
 $categories = get_categories($connection);
-$items = get_lots($connection);
+
+$cur_page = $_GET['page'] ?? 1;
+$page_items = 3;
+$offset = ($cur_page - 1) * $page_items;
+$items_count = get_lots($connection, $page_items, $offset)['num'];
+$pages_count = ceil($items_count / $page_items);
+$pages = range(1, $pages_count);
+$items = get_lots($connection, $page_items, $offset)['list'];
 $layout = templates_include_layout($user, $categories);
 
 $content = include_template ('main.php', [
     'categories' => $categories, 
-    'items' => $items
+    'items' => $items,
+    'pages' => $pages,
+    'pages_count' => $pages_count,
+    'cur_page' => $cur_page
 ]);
 
 $page_content = include_template ('layout.php', [ 
@@ -25,24 +35,10 @@ $page_content = include_template ('layout.php', [
 
 print($page_content);
 
-/**
- * @param mysqli $connection
- * @return array [
- *  [
- *      'id' => int,
- *      'create' => string,
- *      'heading' => string,
- *      'first_price' => int,
- *      'price_step' => int,
- *      'finish' => string,
- *      'image' => string,
- *      'title => string
- *  ],
- *  ...
- * ]
- */
-function get_lots(mysqli $connection): array
+
+function get_lots(mysqli $connection, $page_items, $offset): array
 {
+    $items = [];
     $sql_items = "
     SELECT
 	l.`id`,
@@ -62,12 +58,17 @@ LEFT JOIN
 (SELECT `bet_lot_id`, COUNT(`bet_lot_id`) AS `count_bets`, MAX(`price`) AS `max_price` FROM bet GROUP BY `bet_lot_id`) b ON
 l.`id` = b.`bet_lot_id`
 WHERE
-	l.`finish` > NOW()
+	l.`finish` > NOW() AND l.`winner_user_id` IS NULL
 ORDER BY
 	`create` DESC";
+    $res = mysqli_query($connection, $sql_items);
+    $items['num'] = mysqli_num_rows($res);
+    $sql_items .= " LIMIT ? OFFSET ?";
 
-    $result_items = mysqli_query($connection, $sql_items);
-    $items = $result_items ? mysqli_fetch_all($result_items, MYSQLI_ASSOC) : [];
-
+    $stmt = db_get_prepare_stmt($connection, $sql_items, $data = [$page_items, $offset]);
+    mysqli_stmt_execute($stmt);
+    $result_items = mysqli_stmt_get_result($stmt);
+    $items['list'] = $result_items ? mysqli_fetch_all($result_items, MYSQLI_ASSOC) : [];
+ 
     return $items;
 }

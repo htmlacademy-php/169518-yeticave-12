@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Формирует header и верхнее меню сайта из шаблонов
+ *
+ * @param  array $user
+ * @param  array $categories
+ * @return array
+ */
 function templates_include_layout(array $user, array $categories) {
     return [
         'header' => include_template('header.php', [
