@@ -44,13 +44,13 @@
     </ul>
     <?php if ($pages_count > 1): ?>
 <ul class="pagination-list">
-    <li class="pagination-item pagination-item-prev"><a href="">Назад</a></li>
+    <li class="pagination-item pagination-item-prev"><a href="index.php<?= (CUR_PAGE == 1) ? '' : '?page=' . (CUR_PAGE - 1); ?>">Назад</a></li>
     <?php foreach ($pages as $page): ?>
-    <li class="pagination-item <?php if ($page == $cur_page): ?>pagination-item-active<?php endif; ?>">
-        <a href="index.php?page=<?=$page;?>"><?=$page;?></a>
+    <li class="pagination-item <?php if ($page == CUR_PAGE): ?>pagination-item-active<?php endif; ?>">
+        <a href="index.php?page=<?= $page; ?>"><?= $page; ?></a>
     </li>
     <?php endforeach; ?>
-    <li class="pagination-item pagination-item-next"><a href="">Вперед</a></li>
+    <li class="pagination-item pagination-item-next"><a href="index.php<?= (CUR_PAGE == $pages_count) ? '' : '?page=' . (CUR_PAGE + 1); ?>">Вперед</a></li>
 </ul>
 <?php endif; ?>
 </section>
