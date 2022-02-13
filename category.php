@@ -10,28 +10,25 @@ require_once('src/functions.php');
 $connection = database_get_connection();
 $categories = get_categories($connection);
 $layout = templates_include_layout($user, $categories);
-$cur_page = $_GET['page'] ?? 1;
-$page_items = 9;
-$offset = ($cur_page - 1) * $page_items;
 /*
  * Отображение - View
  */
 if(is_get()) {
     $set_category = request_get_category('name');
-    $cat_count = show_cat($connection, $page_items, $offset)['num']; 
-    $pages_count = ceil($cat_count / $page_items);
+    $cat_count = show_cat($connection)['num']; 
+    $pages_count = ceil($cat_count / PAGE_ITEMS);
     $pages = range(1, $pages_count);
-    $single_category = show_cat($connection, $page_items, $offset)['list'];
+    $single_category = show_cat($connection)['list'];
+    $category_url = $_SERVER['PHP_SELF'] . '?name='. $set_category;
 
 if(!empty($single_category)) {
     $category_name = $single_category[0]['title'];
     $content = include_template('category.php', [
         'category_name' => $category_name,
-        'set_category' => $set_category,
         'single_category' => $single_category,
         'pages' => $pages,
         'pages_count' => $pages_count,
-        'cur_page' => $cur_page
+        'category_url' => $category_url
     ]);
 }
 else {
@@ -78,9 +75,9 @@ function request_get_category(string $name): string {
  * @param  mixed $connection
  * @return array массив с данными о товарах в категории
  */
-function show_cat(mysqli $connection,  int $page_items, int $offset): array {  
+function show_cat(mysqli $connection): array {  
     $query = [];
-    $sql_single_category = "
+    $sql_query = "
     SELECT
 	l.`id`,
 	l.`create`,
@@ -102,15 +99,11 @@ WHERE
 	l.`finish` > CURDATE() AND c.`symbol` LIKE ? ORDER BY `create` DESC";
         
     $single_category_name = filter_input(INPUT_GET, 'name', FILTER_SANITIZE_STRING);
-    $stmt = db_get_prepare_stmt($connection, $sql_single_category, [$single_category_name]);
+    $stmt = db_get_prepare_stmt($connection, $sql_query, [$single_category_name]);
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
     $query['num'] = mysqli_num_rows($res);
  
-    $sql_single_category .= " LIMIT ? OFFSET ?";
-    $stmt = db_get_prepare_stmt($connection, $sql_single_category, $data = [$single_category_name, $page_items, $offset]);
-    mysqli_stmt_execute($stmt);
-    $res = mysqli_stmt_get_result($stmt);
-    $query['list'] = $res ? mysqli_fetch_all($res, MYSQLI_ASSOC) : [];
+    $query['list'] = pagination_query($connection, $query, $sql_query, $single_category_name);
     return $query;
 }

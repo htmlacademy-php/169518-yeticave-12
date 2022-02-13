@@ -9,10 +9,10 @@
             <span class="form__error"><?= $errors['lot-name'] ?? ""; ?></span>
         </div>
         <div class="form__item <?= isset($errors['lot-category']) ? "form__item--invalid" : "" ?>">
-          <label for="category">Категория <sup>*</sup></label>
-          <select id="category" name="lot-category">
-              <option>Выберите категорию</option>
-              <?php foreach ($categories as $category): ?>
+            <label for="category">Категория <sup>*</sup></label>
+            <select id="category" name="lot-category">
+                <option>Выберите категорию</option>
+                <?php foreach ($categories as $category): ?>
                 <option value="<?= $category['id'] ?>"><?=$category['title']; ?></option>
                 <?php endforeach; ?>
             </select>
@@ -38,12 +38,14 @@
     <div class="form__container-three">
         <div class="form__item form__item--small <?= isset($errors['lot-rate']) ? "form__item--invalid" : "" ?>">
             <label for="lot-rate">Начальная цена <sup>*</sup></label>
-            <input id="lot-rate" type="text" name="lot-rate" placeholder="Введите число" value="<?= request_get_post_val('lot-rate'); ?>">
+            <input id="lot-rate" type="text" name="lot-rate" placeholder="Введите число"
+                value="<?= request_get_post_val('lot-rate'); ?>">
             <span class="form__error"><?=$errors['lot-rate'] ?? "";?></span>
         </div>
         <div class="form__item form__item--small <?= isset($errors['lot-step']) ? "form__item--invalid" : "" ?>">
             <label for="lot-step">Шаг ставки <sup>*</sup></label>
-            <input id="lot-step" type="text" name="lot-step" placeholder="1 по умолчанию" value="<?= request_get_post_val('lot-step'); ?>">
+            <input id="lot-step" type="text" name="lot-step" placeholder="1 по умолчанию"
+                value="<?= request_get_post_val('lot-step'); ?>">
             <span class="form__error"><?=$errors['lot-step'] ?? "";?></span>
         </div>
         <div class="form__item <?= isset($errors['lot-date']) ? "form__item--invalid" : "" ?>">
@@ -58,4 +60,3 @@
     <?php endif; ?>
     <button type="submit" class="button">Добавить лот</button>
 </form>
-

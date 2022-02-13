@@ -104,3 +104,47 @@ function bet_duration(string $bet): ?string {
     }
 }
 
+
+/**
+ * pagination_query разбивает выдачу по запросу на несколько страниц, в зависимости от величины выдачи
+ *
+ * @param  mixed $connection
+ * @param  array $query запрос, где уже есть количество единиц выдачи, и куда добавится информация о лотах на одной странице
+ * @param  string $sql_query большой запрос к базе, к которому добавим лимит и на сколько позиций сдвигать
+ * @param  mixed $param параметр запроса для формирования подготовленного запроса, может быть null
+ * @return array
+ */
+function pagination_query(mysqli $connection, array $query, string $sql_query, ?string $param): array {
+
+    $offset = (CUR_PAGE - 1) * PAGE_ITEMS;
+    $sql_query .= " LIMIT ? OFFSET ?";
+    $prepared_data = [$param, PAGE_ITEMS, $offset];
+    if(is_null($param)) {
+    array_shift($prepared_data);
+    }
+    $stmt = db_get_prepare_stmt($connection, $sql_query, $prepared_data);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    $query['list'] = $res ? mysqli_fetch_all($res, MYSQLI_ASSOC) : [];
+    return $query['list'];
+    }
+
+    function backward(string $url): string {
+         if (CUR_PAGE == 1) {
+            $backward_string = $url; 
+         }
+        else {
+            $backward_string = $url . "&page=" . (CUR_PAGE - 1);
+        }
+         return $backward_string;
+    }
+
+    function forward(string $url, int $pages_count): string {
+        if (CUR_PAGE == $pages_count) {
+           $forward_string = $url; 
+        }
+       else {
+           $forward_string = $url . "&page=" . (CUR_PAGE + 1);
+       }
+        return $forward_string;
+   }

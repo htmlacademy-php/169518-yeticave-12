@@ -30,13 +30,13 @@
     </ul>
     <?php if ($pages_count > 1): ?>
     <ul class="pagination-list">
-        <li class="pagination-item pagination-item-prev"><a href="">Назад</a></li>
+        <li class="pagination-item pagination-item-prev"><a href="<?= backward($category_url); ?>">Назад</a></li>
         <?php foreach ($pages as $page): ?>
-        <li class="pagination-item <?php if ($page == $cur_page): ?>pagination-item-active<?php endif; ?>">
-            <a href="category.php?name=<?= $set_category; ?>&page=<?= $page; ?>"><?= $page; ?></a>
+        <li class="pagination-item <?php if ($page == CUR_PAGE): ?>pagination-item-active<?php endif; ?>">
+            <a href="<?= $category_url; ?>&page=<?= $page; ?>"><?= $page; ?></a>
         </li>
         <?php endforeach; ?>
-        <li class="pagination-item pagination-item-next"><a href="">Вперед</a></li>
+        <li class="pagination-item pagination-item-next"><a href="<?= forward($category_url, $pages_count); ?>">Вперед</a></li>
     </ul>
     <?php endif; ?>
 </section>

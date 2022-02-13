@@ -28,14 +28,14 @@
         <?php endforeach; ?>
     </ul>
     <?php if ($pages_count > 1): ?>
-<ul class="pagination-list">
-    <li class="pagination-item pagination-item-prev"><a href="">Назад</a></li>
-    <?php foreach ($pages as $page): ?>
-    <li class="pagination-item <?php if ($page == $cur_page): ?>pagination-item-active<?php endif; ?>">
-        <a href="search.php?search=<?= $search; ?>&page=<?= $page; ?>"><?= $page; ?></a>
-    </li>
-    <?php endforeach; ?>
-    <li class="pagination-item pagination-item-next"><a href="">Вперед</a></li>
-</ul>
-<?php endif; ?>
+    <ul class="pagination-list">
+        <li class="pagination-item pagination-item-prev"><a href="<?= backward($search_url); ?>">Назад</a></li>
+        <?php foreach ($pages as $page): ?>
+        <li class="pagination-item <?php if ($page == CUR_PAGE): ?>pagination-item-active<?php endif; ?>">
+            <a href="<?= $search_url; ?>&page=<?= $page; ?>"><?= $page; ?></a>
+        </li>
+        <?php endforeach; ?>
+        <li class="pagination-item pagination-item-next"><a href="<?= forward($search_url, $pages_count); ?>">Вперед</a></li>
+    </ul>
+    <?php endif; ?>
 </section>

@@ -10,10 +10,6 @@ $connection = database_get_connection();
 $categories = get_categories($connection);
 $layout = templates_include_layout($user, $categories);
 
-$cur_page = $_GET['page'] ?? 1;
-$page_items = 9;
-$offset = ($cur_page - 1) * $page_items;
-
 /*
  * Отображение - View
  */
@@ -24,10 +20,11 @@ else {
     $search = '';
 }
 if ($search) {
-    $items_count = search_query($connection, $search, $page_items, $offset)['num']; 
-    $pages_count = ceil($items_count / $page_items);
+    $items_count = search_query($connection, $search)['num']; 
+    $pages_count = ceil($items_count / PAGE_ITEMS);
     $pages = range(1, $pages_count);
-    $search_result = search_query($connection, $search, $page_items, $offset)['search']; 
+    $search_result = search_query($connection, $search)['list']; 
+    $search_url = $_SERVER['PHP_SELF'] . '?search='. $search;
 
 if(!empty($search_result)) {
 
@@ -36,7 +33,7 @@ if(!empty($search_result)) {
         'search_result' => $search_result,
         'pages' => $pages,
         'pages_count' => $pages_count,
-        'cur_page' => $cur_page
+        'search_url' => $search_url
     ]);
 }
 else {
@@ -70,10 +67,10 @@ else {
  * @param  string $search поисковый запрос
  * @return array массив с данными о лотах для вывода в результатах поиска
  */
-function search_query(mysqli $connection, string $search, int $page_items, int $offset): array {  
+function search_query(mysqli $connection, string $search): array {  
     $query = [];
 
-    $sql_search_query = "
+    $sql_query = "
     SELECT
 	l.`id`,
 	l.`create`,
@@ -94,17 +91,11 @@ l.`id` = b.`bet_lot_id`
 WHERE MATCH(`heading`, `description`) AGAINST(?) ORDER BY `create` DESC";
   
 
-$stmt = db_get_prepare_stmt($connection, $sql_search_query, [$search]);
+$stmt = db_get_prepare_stmt($connection, $sql_query, [$search]);
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
     $query['num'] = mysqli_num_rows($res);
  
-    $sql_search_query .= " LIMIT ? OFFSET ?";
-
-
-$stmt = db_get_prepare_stmt($connection, $sql_search_query, $data = [$search, $page_items, $offset]);
-    mysqli_stmt_execute($stmt);
-    $res = mysqli_stmt_get_result($stmt);
-    $query['search'] = $res ? mysqli_fetch_all($res, MYSQLI_ASSOC) : [];
+    $query['list'] = pagination_query($connection, $query, $sql_query, $search);
     return $query;
 }
