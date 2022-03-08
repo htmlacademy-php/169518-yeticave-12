@@ -2,8 +2,9 @@
 use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mime\Email;
+
 require_once 'vendor/autoload.php';
- 
+
 /*
  * Получение данных - Controller
  */
@@ -13,11 +14,10 @@ $transport = Transport::fromDsn($dsn);
 
 $connection = database_get_connection();
 $finished_lots = find_finished_lots($connection);
-if(!empty($finished_lots)) {
+if (!empty($finished_lots)) {
 
-foreach($finished_lots as $arr) {
-    foreach($arr as $key => $lot_id) {
-        $lot_id = (int) $lot_id;
+    foreach ($finished_lots as $arr) {
+        $lot_id = (int)$arr['bet_lot_id'];
         $winner = find_lot_winner($connection, $lot_id);
         $message = new Email();
         $message->to($winner['email']);
@@ -30,50 +30,9 @@ foreach($finished_lots as $arr) {
         $new_winner_id = $winner['bet_user_id'];
         set_lot_winner($connection, $new_winner_id, $lot_id);
     }
-}
-}
-
-else {
+} else {
     return null;
 }
-/*
- * Бизнес-логика - Model
- */
 
-/*
-выборка завершенных лотов со ставками
-*/
-function find_finished_lots(mysqli $connection): array {
-    $sql = "SELECT b.`bet_lot_id`
-    FROM lot l JOIN bet b ON b.`bet_lot_id` = l.`id` WHERE l.`finish` < NOW() AND l.`winner_user_id` IS NULL GROUP BY l.`id`";
-    $result = mysqli_query($connection, $sql);
-    $finished = $result ? mysqli_fetch_all($result, MYSQLI_ASSOC) : [];
-    return $finished;
-}
-
-/*
-по айди лота ищем победителя
-*/
-function find_lot_winner(mysqli $connection, int $lot_id): array {
-    $sql = "SELECT b.`bet_user_id`, u.`email` AS `email`, u.`username`, l.`id`, l.`heading` 
-    FROM bet b JOIN users u ON b.`bet_user_id` = u.`id`
-    JOIN lot l ON b.`bet_lot_id` = l.`id` 
-    WHERE b.`id` = (SELECT MAX(`id`) FROM bet WHERE `bet_lot_id` = ?)";
-
-    $stmt = db_get_prepare_stmt($connection, $sql, [$lot_id]);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-    $winners_list = $result ? mysqli_fetch_array($result, MYSQLI_ASSOC) : [];
-    return $winners_list;
-}
-
-/*
-записываем победителя в лот
- */
-function set_lot_winner(mysqli $connection, $winner_id, $lot_id) {
-    $sql = "UPDATE lot SET `winner_user_id` = ? WHERE `id` = ?";
-    $stmt = db_get_prepare_stmt($connection, $sql, $data = [$winner_id, $lot_id]);
-    mysqli_stmt_execute($stmt);
-}
 
 
