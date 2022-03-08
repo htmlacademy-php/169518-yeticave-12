@@ -1,10 +1,9 @@
 <?php
-require_once('src/helpers.php');
 require_once('src/database.php');
+require_once('src/helpers.php');
 require_once('src/functions.php');
 require_once('src/request.php');
 require_once('src/validate.php');
-
 /*
  * Получение данных - Controller
  */
@@ -16,9 +15,9 @@ $errors = [];
 if (request_is_post()) {
     $login = $_POST;
     $required = ['login-email', 'login-password'];
-	foreach ($required as $field) {
-	    if (empty($login[$field])) {
-	        $errors[$field] = 'Это поле надо заполнить';
+    foreach ($required as $field) {
+        if (empty($login[$field])) {
+            $errors[$field] = 'Это поле надо заполнить';
         }
     }
     if (empty($errors['login-email'])) {
@@ -26,18 +25,17 @@ if (request_is_post()) {
         $sql = "SELECT * FROM users WHERE email = '$email'";
         $res = mysqli_query($connection, $sql);
         $logged = $res ? mysqli_fetch_array($res, MYSQLI_ASSOC) : null;
-            if ($logged == null) {
-                $errors['login-email'] = 'Неправильно введен электронный адрес';
-            }
+        if ($logged == null) {
+            $errors['login-email'] = 'Неправильно введен электронный адрес';
+        }
     }
     if (empty($errors)) {
         if (!password_verify($login['login-password'], $logged['pass'])) {
-			$errors['login-password'] = 'Вы ввели неверный пароль';
-        }
-        else {
-        $_SESSION['user'] = $logged;
-        header('Location: index.php');
-        exit();
+            $errors['login-password'] = 'Вы ввели неверный пароль';
+        } else {
+            $_SESSION['user'] = $logged;
+            header('Location: index.php');
+            exit();
         }
     }
 }
@@ -50,15 +48,11 @@ $content = include_template('signin.php', [
     'categories' => $categories
 ]);
 
-$page_content = include_template('layout.php', [ 
-    'header' => $layout['header'], 
-    'top_menu' => $layout['top_menu'],  
-    'content' => $content, 
+$page_content = include_template('layout.php', [
+    'header' => $layout['header'],
+    'top_menu' => $layout['top_menu'],
+    'content' => $content,
     'categories' => $categories
 ]);
 
 print($page_content);
-
-/*
- * Бизнес-логика - Model
- */
