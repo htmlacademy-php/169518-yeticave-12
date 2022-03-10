@@ -28,7 +28,7 @@ function validate_numeric($name)
 {
     if (!is_numeric($name)) {
         return 'Введите число';
-    } elseif (abs($name) != $name) {
+    } elseif (abs($name) !== $name) {
         return 'Число должно быть больше нуля';
     }
     return null;

@@ -70,7 +70,7 @@ function bet_duration(string $bet): ?string
     $min = (int)$bet_date['minutes'];
     $hour = (int)$bet_date['hours'];
     if ($hour <= $hour_now) {
-        if ($bet_date['hours'] == '00') {
+        if ($bet_date['hours'] === '00') {
             return $min . ' ' . get_noun_plural_form($min, 'минута', 'минуты', 'минут') . ' назад';
         } else {
             return $hour . ' ' . get_noun_plural_form($hour, 'час', 'часа', 'часов') . ' назад';
@@ -91,10 +91,10 @@ function bet_duration(string $bet): ?string
  */
 function show_classes(array $bet_id_and_price, array $winning_bets): array
 {
-    $class = [];
+    $class = ['item-end' => ' ', 'timer-end' => ' '];
     foreach ($winning_bets as $bet) {
-        if (htmlspecialchars($bet_id_and_price['id']) == htmlspecialchars($bet['ended'])) {
-            if (htmlspecialchars($bet_id_and_price['price']) == htmlspecialchars($bet['max_price'])) {
+        if (htmlspecialchars($bet_id_and_price['id']) === htmlspecialchars($bet['ended'])) {
+            if (htmlspecialchars($bet_id_and_price['price']) === htmlspecialchars($bet['max_price'])) {
                 $class['item-end'] = 'rates__item--win';
                 $class['timer-end'] = 'timer--win';
             } else {
@@ -137,7 +137,7 @@ function pagination_query(mysqli $connection, array $query, string $sql_query, ?
  */
 function backward(string $url): string
 {
-    if (CUR_PAGE == 1) {
+    if (CUR_PAGE === 1) {
         $backward_string = $url;
     } else {
         $backward_string = $url . "&page=" . (CUR_PAGE - 1);
@@ -152,7 +152,7 @@ function backward(string $url): string
  */
 function forward(string $url, int $pages_count): string
 {
-    if (CUR_PAGE == $pages_count) {
+    if (CUR_PAGE === $pages_count) {
         $forward_string = $url;
     } else {
         $forward_string = $url . "&page=" . (CUR_PAGE + 1);

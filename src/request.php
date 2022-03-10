@@ -7,7 +7,7 @@
  */
 function is_get(): bool
 {
-    return $_SERVER['REQUEST_METHOD'] == 'GET';
+    return $_SERVER['REQUEST_METHOD'] === 'GET';
 }
 
 /**
@@ -17,7 +17,7 @@ function is_get(): bool
  */
 function request_is_post(): bool
 {
-    return $_SERVER['REQUEST_METHOD'] == 'POST';
+    return $_SERVER['REQUEST_METHOD'] === 'POST';
 }
 
 /**
