@@ -25,7 +25,7 @@ if (request_is_post()) {
         $sql = "SELECT * FROM users WHERE email = '$email'";
         $res = mysqli_query($connection, $sql);
         $logged = $res ? mysqli_fetch_array($res, MYSQLI_ASSOC) : null;
-        if ($logged == null) {
+        if ($logged === null) {
             $errors['login-email'] = 'Неправильно введен электронный адрес';
         }
     }

@@ -33,7 +33,7 @@
         <ul class="pagination-list">
             <li class="pagination-item pagination-item-prev"><a href="<?= backward($category_url); ?>">Назад</a></li>
             <?php foreach ($pages as $page): ?>
-                <li class="pagination-item <?php if ($page === CUR_PAGE): ?>pagination-item-active<?php endif; ?>">
+                <li class="pagination-item <?php if ($page == CUR_PAGE): ?>pagination-item-active<?php endif; ?>">
                     <a href="<?= $category_url; ?>&page=<?= $page; ?>"><?= $page; ?></a>
                 </li>
             <?php endforeach; ?>
